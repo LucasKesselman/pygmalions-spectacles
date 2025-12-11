@@ -3,6 +3,8 @@ import * as GUI from '@babylonjs/gui';
 //import "@babylonjs/core/Debug/debugLayer";
 //import "@babylonjs/inspector";
 import Engine from "./Engine.ts";
+// Register GLTF/loaders plugin so SceneLoader can handle .gltf/.glb files
+import '@babylonjs/loaders';
 
 
 export default class LevelManager {
@@ -56,7 +58,7 @@ export default class LevelManager {
         skybox.parent = environmentNode;
 
         // ~ Platform
-        BABYLON.SceneLoader.ImportMeshAsync(["environment-ico-platform-mesh"], "../babylon_blender_assets/", "platformv1.gltf", levelScene).then( (environmentMeshes) => {
+        BABYLON.SceneLoader.ImportMeshAsync(["environment-ico-platform-mesh"], "../assets/babylon_blender_assets/", "platformv1.gltf", levelScene).then( (environmentMeshes) => {
             environmentMeshes.meshes.forEach(mesh => {
                 mesh.isVisible = true;
                 mesh.checkCollisions = true;
@@ -130,7 +132,7 @@ export default class LevelManager {
                 newScene = new BABYLON.Scene(engine.GetEngine());
 
                 // ~ Load Level Debug Tools
-                this.LoadLevelDebugTools(newScene);
+                //this.LoadLevelDebugTools(newScene);
 
                 // ~ Load Level Environment
                 this.LoadLevelEnvironment(newScene,1);

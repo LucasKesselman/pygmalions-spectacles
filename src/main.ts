@@ -5,6 +5,7 @@ import LevelManager from './core/LevelManager.ts';
 
 
 
+
 //ON DOMContentLoaded
 window.addEventListener('DOMContentLoaded', () => {
     console.log("%cDOM Conent Loaded", "color:green");

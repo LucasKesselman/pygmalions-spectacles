@@ -10,29 +10,7 @@ export default class Engine {
     private _babylonEngine: BABYLON.Engine;
     private _aspectRatio: number|undefined;
     private _gamepadManager: BABYLON.GamepadManager;
-    
 
-    // private _audioOptions: BABYLON.IAudioEngineOptions = {
-    //         outputAudio: true,
-    //         spatialSound: true,
-    //         maxSoundPointers: 8,
-    //         disableAudioFocus: false,
-    //         audioDevice: null,
-    //         useHRTF: true,
-    //         hrtfMaxAngle: Math.PI,
-    //         audioContextInitialized: false,
-    //         audioEnabled: true,
-    //         useCustomHRTF: false,
-
-    //         useAudioWorklet: true,
-    //         audioWorkletModule: './audio-worklet.js',
-    //         audioWorkletInputs: [
-    //             'input'
-    //         ],
-    //         audioWorkletOutputs: [
-    //             'output'
-    //         ]
-    // }
 
     private _engineOptions: BABYLON.EngineOptions = {
  
