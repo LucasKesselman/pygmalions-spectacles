@@ -29,7 +29,7 @@
     "vite": "^7.2.7"
   },
   "scripts": {
-    "start": "tsc && vite",
+    "start": "tsc && vite --host",
     "dev": "vite build && vite preview"
   }
 }

@@ -1,0 +1,45 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        // 1. Launch the Node.js Server by executing 'npm start'
+        {
+            "name": "01: Run NPM Start (Node)",
+            "type": "node",
+            "request": "launch",
+            // This tells VS Code to run the 'npm' command
+            "runtimeExecutable": "npm",
+            // This is equivalent to 'npm run start'
+            "runtimeArgs": [
+                "run",
+                "start"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            // ... (rest of the properties)
+            // ...
+        },
+        // 2. Attach Firefox Debugger and Open Browser
+        // REQUIRES 'Debugger for Firefox' Extension
+        {
+            "name": "02: Attach Debugger & Open Firefox",
+            "type": "firefox",
+            "request": "launch",
+            "url": "http://192.168.1.83:5173/",
+            "webRoot": "${workspaceFolder}",
+            "reAttach": true,
+            "timeout": 10000 // Give time for the npm server to start
+        }
+    ],
+    // Compound Configuration to run both sequentially
+    "compounds": [
+        {
+            "name": "Full Stack Debug: NPM + Firefox",
+            "configurations": [
+                "01: Run NPM Start (Node)",
+                "02: Attach Debugger & Open Firefox"
+            ],
+            // Ensures both targets run simultaneously
+            "stopAll": true
+        }
+    ]
+}
