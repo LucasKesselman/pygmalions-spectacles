@@ -1,0 +1,28 @@
+// .vscode/tasks.json
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build and Serve (Vite)",
+      "type": "shell",
+      "isBackground": true,
+      // ... presentation/options omitted for brevity ...
+      "command": "npm start",
+      "problemMatcher": [
+        "$tsc-watch",
+        {
+          "pattern": {
+            "regexp": ".*"
+          },
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": "^(Starting compilation|tsc --watch)",
+            // This is the CRITICAL line to detect Vite server readiness
+            "endsPattern": "Local:\\s+(http:\\/\\/localhost:[0-9]+)", 
+          }
+        }
+      ],
+      "group": "build"
+    }
+  ]
+}
