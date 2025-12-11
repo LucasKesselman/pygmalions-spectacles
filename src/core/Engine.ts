@@ -1,6 +1,6 @@
 
 import * as BABYLON from '@babylonjs/core';
-import LevelManager from './LevelManager';
+import LevelManager from './LevelManager.ts';
 
 
 export default class Engine {

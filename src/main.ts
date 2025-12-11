@@ -1,6 +1,5 @@
-import './style.css'
-import Engine from './core/Engine';
-import LevelManager from './core/LevelManager';
+import Engine from './core/Engine.ts';
+import LevelManager from './core/LevelManager.ts';
 
 
 
