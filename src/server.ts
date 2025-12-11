@@ -20,4 +20,5 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`WOW! Server is running on http://localhost:${PORT}`);
+  console.log(`Serving files from: ${__dirname}`);
 });
