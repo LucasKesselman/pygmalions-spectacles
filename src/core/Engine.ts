@@ -61,6 +61,18 @@ export default class Engine {
         this._canvas.width = width;
         this._canvas.height = height;
 
+        // ensure the game area initially matches the window width and
+        // leaves 50px at the top and bottom of the window
+        const winW = window.innerWidth;
+        const winH = window.innerHeight;
+        const areaHeight = Math.max(0, winH - 100); // 50px top + 50px bottom
+        this._gameArea.style.width = winW + "px";
+        this._gameArea.style.height = areaHeight + "px";
+        this._gameArea.style.marginLeft = "0px";
+        this._gameArea.style.marginTop = "50px";
+        this._canvas.width = winW;
+        this._canvas.height = areaHeight;
+
         //set the aspect ratio
         if(width > height){
             this._aspectRatio = width / height;
@@ -88,27 +100,18 @@ export default class Engine {
      */
     private onWindowResize(): void {
         console.log("%cWindow Resized", "color:green");
+        const winW = window.innerWidth;
+        const winH = window.innerHeight;
+        const areaHeight = Math.max(0, winH - 100); // 50px top + 50px bottom
 
-        let width: number;
-        let height: number;
-        let windowAspectRatio: number = window.innerWidth / window.innerHeight;
+        this._gameArea.style.width = winW + "px";
+        this._gameArea.style.height = areaHeight + "px";
+        this._gameArea.style.marginLeft = "0px";
+        this._gameArea.style.marginTop = "50px";
 
-        //horizontal
-        if(windowAspectRatio > this._aspectRatio!){
-            height = window.innerHeight;
-            width = height * this._aspectRatio!;
-        }
-        //vertical
-        else{
-            width = window.innerWidth;
-            height = width / this._aspectRatio!;
-        }
-
-        this._gameArea.style.width = width + "px";
-        this._gameArea.style.height = height + "px";
-
-        this._gameArea.style.marginLeft = (-(width / 2)) + "px";
-        this._gameArea.style.marginTop = (-(height / 2)) + "px";
+        // keep canvas synced with game area
+        this._canvas.width = winW;
+        this._canvas.height = areaHeight;
 
         this._babylonEngine.resize();
         

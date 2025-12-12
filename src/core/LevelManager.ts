@@ -3,6 +3,7 @@ import * as GUI from '@babylonjs/gui';
 //import "@babylonjs/core/Debug/debugLayer";
 //import "@babylonjs/inspector";
 import Engine from "./Engine.ts";
+import * as ZapparBabylon from '@zappar/zappar-babylonjs';
 // Register GLTF/loaders plugin so SceneLoader can handle .gltf/.glb files
 import '@babylonjs/loaders';
 
@@ -103,11 +104,50 @@ export default class LevelManager {
     }
 
     public LoadLevelCamera(levelScene: BABYLON.Scene, engine: Engine, levelID: number): void {
-        // replace this with a FollowCamera instead of ArcRotateCamera
-        const Levelcamera = new BABYLON.ArcRotateCamera(`Camera for levelID=${levelID}`, -Math.PI / 2, Math.PI / 2.5, 60, new BABYLON.Vector3(0, 0, 0), levelScene);
+        // Use a Zappar camera anchored to an image target instead of a Babylon camera
+        const camera = new ZapparBabylon.Camera('zapparCamera', levelScene as any);
 
-        // replace this with Levelcamera.attachControl(engine.GetGamepad(), true);
-        Levelcamera.attachControl(engine.GetCanvas(), true);
+        // Request permissions, then start camera if granted
+        ZapparBabylon.permissionRequestUI().then((granted: boolean) => {
+            if (granted) camera.start();
+            else ZapparBabylon.permissionDeniedUI();
+        });
+
+        // Load the image tracker (target image has a space in its name)
+        const imageTracker = new ZapparBabylon.ImageTrackerLoader().load('./assets/computer-vision-assets/Computer Vision Target.png');
+
+        // Anchor transform node that follows the tracked image in AR space
+        const trackerTransformNode = new ZapparBabylon.ImageAnchorTransformNode('tracker', camera, imageTracker, levelScene as any);
+
+        // If the platform mesh is added later (ImportMeshAsync), parent it to the tracker
+        const parentIfPlatform = (mesh: BABYLON.AbstractMesh) => {
+            if (mesh.name === 'environment-ico-platform-mesh') {
+                mesh.parent = trackerTransformNode as any;
+                mesh.visibility = 1; // hide until target visible
+            }
+        };
+
+        // Parent existing mesh if already present
+        const existing = levelScene.getMeshByName('environment-ico-platform-mesh');
+        if (existing) parentIfPlatform(existing);
+
+        // Parent any newly added mesh matching the platform name
+        levelScene.onNewMeshAddedObservable.add((mesh) => parentIfPlatform(mesh));
+
+        // Toggle platform visibility based on tracker events
+        imageTracker.onVisible.bind(() => {
+            const m = levelScene.getMeshByName('environment-ico-platform-mesh');
+            if (m) m.visibility = 1;
+        });
+        imageTracker.onNotVisible.bind(() => {
+            const m = levelScene.getMeshByName('environment-ico-platform-mesh');
+            if (m) m.visibility = 0;
+        });
+
+        // Ensure the Zappar camera updates each frame before the scene renders
+        levelScene.onBeforeRenderObservable.add(() => {
+            camera.updateFrame();
+        });
     }
 
 
