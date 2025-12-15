@@ -29,11 +29,12 @@
     "@babylonjs/inspector": "^8.40.1",
     "@babylonjs/loaders": "^8.40.1",
     "express": "^4.18.2",
+    "firebase": "^12.6.0",
     "nvm": "^0.0.4",
     "vite": "^7.2.7"
   },
   "scripts": {
-    "start": "concurrently \"tsc --watch\" \"vite --port 3000 --host\"",
+    "start": "concurrently \"tsc --watch\" \"vite --port 3000 --host\" && firebase deploy",
     "preview": "vite build && vite preview",
     "compile": "tsc",
     "build": "vite build"

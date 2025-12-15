@@ -8,6 +8,7 @@
       "isBackground": true,
       // ... presentation/options omitted for brevity ...
       "command": "npm start",
+
       "problemMatcher": [
         "$tsc-watch",
         {
@@ -18,7 +19,7 @@
             "activeOnStart": true,
             "beginsPattern": "^(Starting compilation|tsc --watch)",
             // This is the CRITICAL line to detect Vite server readiness
-            "endsPattern": "Local:\\s+(http:\\/\\/localhost:[0-9]+)", 
+            "endsPattern": "Local:\\s+(https:\\/\\/localhost:[0-9]+)", 
           }
         }
       ],
