@@ -2,42 +2,26 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch and Debug Vite App",
-      "type": "chrome", // Use 'msedge' or 'chrome'
-      "request": "launch",
-      "url": "http://localhost:5173", // Update port if necessary
-      "webRoot": "${workspaceFolder}",
-      "preLaunchTask": "Build and Serve (Vite)",
-      "sourceMaps": true,
-      "sourceMapPathOverrides": {
-        "webpack:///./*": "${webRoot}/*",
-        "webpack:///src/*": "${webRoot}/src/*",
-        "http://localhost:5173/src/*": "${webRoot}/src/*"
-      }
-      // Note: The 'msedge'/'chrome' type *automatically* opens the browser and attaches the debugger.
-    }
-    ,
-    {
-      "name": "Launch: Chrome (iPhone 15 emulation)",
+      "name": "Launch & Debug",
       "type": "chrome",
       "request": "launch",
-      "url": "http://localhost:5173",
+      "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}",
-      "preLaunchTask": "Build and Serve (Vite)",
+      "preLaunchTask": "npm start task for Vite server and tsc watch",
       "runtimeArgs": [
         // Use a desktop resolution (DPR 1) but an iPhone-like tall/narrow window
         // 390x844 are common CSS viewport dimensions for modern iPhones.
         "--window-size=390,844",
         "--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/120.0.0.0 Mobile/15E148 Safari/604.1"
       ],
-      "presentation": {
-        "group": "Mobile Emulation"
-      },
+      // "presentation": {
+      //   "group": "Mobile Emulation"
+      // },
       "sourceMaps": true,
       "sourceMapPathOverrides": {
         "webpack:///./*": "${webRoot}/*",
         "webpack:///src/*": "${webRoot}/src/*",
-        "http://localhost:5173/src/*": "${webRoot}/src/*"
+        "http://localhost:3000/src/*": "${webRoot}/src/*"
       }
     }
   ]

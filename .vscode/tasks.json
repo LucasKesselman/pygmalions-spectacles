@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build and Serve (Vite)",
+      "label": "npm start task for Vite server and tsc watch",
       "type": "shell",
       "isBackground": true,
       // ... presentation/options omitted for brevity ...

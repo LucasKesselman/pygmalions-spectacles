@@ -16,6 +16,7 @@
   "author": "Lucas Kesselman",
   "license": "MIT",
   "devDependencies": {
+    "@babylonjs/materials": "^8.41.1",
     "@types/express": "^4.17.21",
     "@types/node": "^20.11.5",
     "concurrently": "^9.2.1",
@@ -32,7 +33,7 @@
     "vite": "^7.2.7"
   },
   "scripts": {
-    "start": "concurrently \"tsc --watch\" \"vite --host\"",
+    "start": "concurrently \"tsc --watch\" \"vite --port 3000 --host\"",
     "preview": "vite build && vite preview",
     "compile": "tsc",
     "build": "vite build"
