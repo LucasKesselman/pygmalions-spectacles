@@ -3,7 +3,7 @@ import * as GUI from '@babylonjs/gui';
 //import "@babylonjs/core/Debug/debugLayer";
 //import "@babylonjs/inspector";
 import Engine from "./Engine.ts";
-import * as ZapparBabylon from '@zappar/zappar-babylonjs';
+//import * as ZapparBabylon from '@zappar/zappar-babylonjs';
 // Register GLTF/loaders plugin so SceneLoader can handle .gltf/.glb files
 import '@babylonjs/loaders';
 
@@ -103,6 +103,7 @@ export default class LevelManager {
         });
     }
 
+    /*
     public LoadLevelCamera(levelScene: BABYLON.Scene, engine: Engine, levelID: number): void {
         // Use a Zappar camera anchored to an image target instead of a Babylon camera
         const camera = new ZapparBabylon.Camera('zapparCamera', levelScene as any);
@@ -149,6 +150,7 @@ export default class LevelManager {
             camera.updateFrame();
         });
     }
+    */
 
 
 
@@ -178,7 +180,7 @@ export default class LevelManager {
                 this.LoadLevelEnvironment(newScene,1);
 
                 // ~ Load Level Camera
-                this.LoadLevelCamera(newScene,engine,levelID);
+                //this.LoadLevelCamera(newScene,engine,levelID);
 
 
 

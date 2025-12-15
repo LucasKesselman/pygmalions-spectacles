@@ -1,7 +1,9 @@
+import * as BABYLON from '@babylonjs/core';
 import Engine from './core/Engine.ts';
 import LevelManager from './core/LevelManager.ts';
-import * as ZapparBabylon from '@zappar/zappar-babylonjs';
+//import * as ZapparBabylon from '@zappar/zappar-babylonjs';
 import * as MAT from '@babylonjs/materials';
+//import "@babylonjs/core/Materials/Node/Blocks";
 
 
 
@@ -33,7 +35,59 @@ function init(): void {
     
 
 
+
+
+
+
+  // 3rd attempt
+
+
+    const canvas = document.getElementById("canvas-background") as HTMLCanvasElement;
+    const engine = new BABYLON.Engine(canvas, true);
+
+    const createScene = async () => {
+      const scene = new BABYLON.Scene(engine);
+      const camera = new BABYLON.ArcRotateCamera("camera", (Math.PI / 4)*3, Math.PI / 4, 10, BABYLON.Vector3.Zero(), scene);
+      camera.attachControl(canvas, true);
+      const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+      light.intensity = 0.7;
+
+      const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2, segments: 32 }, scene);
+      sphere.position.y = 1;
+
+      const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 10, height: 10 }, scene);
+      ground.position = new BABYLON.Vector3(0, 0, 0);
+
+      const xr = await scene.createDefaultXRExperienceAsync({
+        // uiOptions: {
+        //   sessionMode: "immersive-ar"
+        // },
+        floorMeshes: [ground],
+        optionalFeatures: true
+      });
+
+      return scene;
+    }
+
+
+
+    createScene().then(scene => {
+      engine.runRenderLoop(() => {
+        scene.render();
+      });
+    });
+
+    window.addEventListener("resize", () => {
+      engine.resize();
+    });
+
+
+
+
+
     // new code to set up basic babyon scene here
+
+    /*
 
 
     const target = './assets/computer-vision-assets/target1.png';
@@ -119,6 +173,7 @@ function init(): void {
       })
     })
 
+    */
 
     // start engine and
     
@@ -134,11 +189,10 @@ function init(): void {
 
     // start the game engine
     //engine.Start(1280, 720, levelManager);
-        
 }
     
     
-function initHTML(): void {
-    console.log("initHTML()");
+// function initHTML(): void {
+//     console.log("initHTML()");
 
-}
+// }
