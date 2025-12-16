@@ -1,46 +1,182 @@
+
+
+// * import Bablyobn modules
 import * as BABYLON from '@babylonjs/core';
+import * as MAT from '@babylonjs/materials';
+////import "@babylonjs/core/Materials/Node/Blocks";
+
+
+// * import zappar babylon module
+////import * as ZapparBabylon from '@zappar/zappar-babylonjs';
+
+
+// * import core modules (made by us)
 import Engine from './core/Engine.ts';
 import LevelManager from './core/LevelManager.ts';
-//import * as ZapparBabylon from '@zappar/zappar-babylonjs';
-import * as MAT from '@babylonjs/materials';
-//import "@babylonjs/core/Materials/Node/Blocks";
 
 
 
-
-
-
-
-
-
-
-
-
-// Import the functions you need from the SDKs you need
-
+// * Import the functions you need from the SDKs you need from firebase
 import { initializeApp } from "firebase/app";
-
-// TODO: Add SDKs for Firebase products that you want to use
-
-// https://firebase.google.com/docs/web/setup#available-libraries
+// if we need more firebase features, we can import them here: https://firebase.google.com/docs/web/setup#available-libraries
 
 
-// Your web app's Firebase configuration
-
-const firebaseConfig = {
-
-  apiKey: "AIzaSyD4W0y8dpLvTQ0VFNniFJJtqVzGjbdpfjg",
-  authDomain: "pygmalions-specs.firebaseapp.com",
-  projectId: "pygmalions-specs",
-  storageBucket: "pygmalions-specs.firebasestorage.app",
-  messagingSenderId: "988189221716",
-  appId: "1:988189221716:web:7ce2741a3be5558ba51ec1"
-};
 
 
-// Initialize Firebase
 
-const app = initializeApp(firebaseConfig);
+
+
+// * Global Variables
+let ground : BABYLON.Mesh;
+let scene : BABYLON.Scene;
+let engine : BABYLON.Engine;
+
+
+
+
+
+
+// ------------------------------------------------------------------------------------------------------
+
+/**
+ * ~ Load and initialize Firebase SDKs
+ * @returns void
+ */
+function initFirebase() : void {
+  console.log("initFirebase()");
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyD4W0y8dpLvTQ0VFNniFJJtqVzGjbdpfjg",
+    authDomain: "pygmalions-specs.firebaseapp.com",
+    projectId: "pygmalions-specs",
+    storageBucket: "pygmalions-specs.firebasestorage.app",
+    messagingSenderId: "988189221716",
+    appId: "1:988189221716:web:7ce2741a3be5558ba51ec1"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+} 
+
+// ------------------------------------------------------------------------------------------------------
+
+/**
+ * ~ Initialize the HTML elements and event listeners
+ * @returns void
+ */
+function initHTML(): void {
+    console.log("initHTML()");
+
+}
+
+// ------------------------------------------------------------------------------------------------------
+/**
+ * ~ Initialize the game engine, scene, camera, lights, basic meshs, and renderer
+ * @returns void
+ */
+async function initBablyon(): Promise<BABYLON.Scene> {
+    console.log("initEngine()");
+
+    const canvas = document.getElementById("canvas-background") as HTMLCanvasElement;
+
+    const engine = new BABYLON.Engine(canvas, true);
+  
+    const scene = new BABYLON.Scene(engine);
+
+    const camera = new BABYLON.ArcRotateCamera("camera", (Math.PI / 4)*3, Math.PI / 4, 10, BABYLON.Vector3.Zero(), scene);
+    camera.attachControl(canvas, true);
+
+    const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+    light.intensity = 0.7;
+
+    const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2, segments: 32 }, scene);
+    sphere.position.y = 1;
+
+    const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 10, height: 10 }, scene);
+    ground.position = new BABYLON.Vector3(0, 0, 0);
+
+    return scene;
+} 
+
+
+
+// ------------------------------------------------------------------------------------------------------
+
+/**
+ * ~ Check if browser is compatible with Zappar, request user camera permissions, and initialize Zappar
+ * @returns void
+ */
+
+function initZappar(): void {
+    console.log("initZappar()");
+}
+
+
+
+// ------------------------------------------------------------------------------------------------------
+
+/**
+ * ~ 
+ * @returns void
+ */
+
+async function initWebXR(scene : Promise<BABYLON.Scene>): Promise<BABYLON.Scene>  {
+    console.log("initWebXR()");
+
+  // --- AR Support Check and Integration ---
+    const AR_SESSION_MODE = 'immersive-ar';
+
+    const isARSupported = await BABYLON.WebXRSessionManager.IsSessionSupportedAsync(AR_SESSION_MODE);
+
+    if (isARSupported) {
+        console.log("WebXR AR is supported. Attempting to create AR experience.");
+        try {
+            // Initialize the AR experience
+            const xr = await (await scene).createDefaultXRExperienceAsync({
+                uiOptions: {
+                    sessionMode: AR_SESSION_MODE // Request AR mode
+                },
+                floorMeshes: [ground], // Use the ground mesh for hit-testing
+                optionalFeatures: ['hit-test'] // Explicitly request essential AR features
+            });
+
+            console.log("Default AR Experience created successfully.");
+
+            // Example: What to do when AR starts
+            xr.baseExperience.onStateChangedObservable.add((state) => {
+                if (state === BABYLON.WebXRState.IN_XR) {
+                    console.log("User entered AR mode.");
+                    // You might want to hide the sphere here until it's placed
+                    // sphere.isVisible = false; 
+                } else if (state === BABYLON.WebXRState.NOT_IN_XR) {
+                    console.log("User exited AR mode.");
+                }
+            });
+
+
+        } catch (error) {
+            console.error("Failed to initialize WebXR AR experience:", error);
+            // Alert the user that AR failed to start despite support detection
+            const message = "AR is supported but failed to start. Ensure your device is up-to-date and AR services are active.";
+            alert(message);
+        }
+    } else {
+        console.warn(`WebXR session mode "${AR_SESSION_MODE}" not supported in this browser/device. Proceeding with standard 3D view.`);
+        // You can add a visible message to the user here if you like
+        // e.g., show a text block on the canvas saying "AR Not Supported"
+    }
+    // --- End AR Support Check ---
+
+    return scene;
+  }
+
+
+
+
+
+
+
 
 
 
@@ -57,8 +193,51 @@ const app = initializeApp(firebaseConfig);
 //ON DOMContentLoaded
 window.addEventListener('DOMContentLoaded', () => {
     console.log("%cDOM Conent Loaded", "color:green");
-    init();
-});
+
+    // Initialize Firebase
+    initFirebase();
+
+    // Initialize the game
+    let scene_01 = initBablyon();
+
+    // Initialize WebXR
+    scene_01 = initWebXR(scene_01);
+
+    // Start the game
+
+    });
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -272,8 +451,3 @@ function init(): void {
     //engine.Start(1280, 720, levelManager);
 //}
     
-    
-// function initHTML(): void {
-//     console.log("initHTML()");
-
-// }
