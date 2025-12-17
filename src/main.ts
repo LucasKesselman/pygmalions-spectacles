@@ -1,40 +1,16 @@
-
-
-// * import Bablyobn modules
+// * import Babylon modules
 import * as BABYLON from '@babylonjs/core';
 import * as MAT from '@babylonjs/materials';
-////import "@babylonjs/core/Materials/Node/Blocks";
-
 
 // * import zappar babylon module
-////import * as ZapparBabylon from '@zappar/zappar-babylonjs';
-
+import * as ZapparBabylon from '@zappar/zappar-babylonjs';
 
 // * import core modules (made by us)
 import Engine from './core/Engine.ts';
 import LevelManager from './core/LevelManager.ts';
 
-
-
-// * Import the functions you need from the SDKs you need from firebase
+// * Import Firebase
 import { initializeApp } from "firebase/app";
-// if we need more firebase features, we can import them here: https://firebase.google.com/docs/web/setup#available-libraries
-
-
-
-
-
-
-
-// * Global Variables
-let ground : BABYLON.Mesh;
-let scene : BABYLON.Scene;
-let engine : BABYLON.Engine;
-
-
-
-
-
 
 // ------------------------------------------------------------------------------------------------------
 
@@ -44,8 +20,7 @@ let engine : BABYLON.Engine;
  */
 function initFirebase() : void {
   console.log("initFirebase()");
-
-  // Your web app's Firebase configuration
+  // Firebase configuration object (sensitive info redacted/example values used)
   const firebaseConfig = {
     apiKey: "AIzaSyD4W0y8dpLvTQ0VFNniFJJtqVzGjbdpfjg",
     authDomain: "pygmalions-specs.firebaseapp.com",
@@ -54,400 +29,226 @@ function initFirebase() : void {
     messagingSenderId: "988189221716",
     appId: "1:988189221716:web:7ce2741a3be5558ba51ec1"
   };
-
-  // Initialize Firebase
+  // Initialize Firebase App
   const app = initializeApp(firebaseConfig);
 } 
 
-// ------------------------------------------------------------------------------------------------------
-
 /**
- * ~ Initialize the HTML elements and event listeners
+ * ~ Initialize base HTML elements and setup initial state
  * @returns void
  */
 function initHTML(): void {
     console.log("initHTML()");
-
+    // Crucial step: Hide the canvas initially so only the modal is visible on load.
+    const canvas = document.getElementById("canvas-background");
+    if(canvas) canvas.style.display = "none";
 }
 
 // ------------------------------------------------------------------------------------------------------
+
 /**
- * ~ Initialize the game engine, scene, camera, lights, basic meshs, and renderer
- * @returns void
+ * ~ Creates the Modal UI to select the experience type and controls the subsequent initialization.
  */
-async function initBablyon(): Promise<BABYLON.Scene> {
-    console.log("initEngine()");
+function setupSelectionUI(): void {
+    // 1. Inject Styles for the modal overlay and buttons
+    const style = document.createElement('style');
+    style.innerHTML = `
+        #intro-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(20, 20, 25, 0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: white; font-family: sans-serif; }
+        .mode-btn { background-color: #4CAF50; border: none; color: white; padding: 20px 40px; font-size: 18px; margin: 15px; cursor: pointer; border-radius: 8px; min-width: 250px; }
+        .mode-btn:hover { background-color: #45a049; }
+        .mode-btn.zappar { background-color: #ff3366; }
+        .mode-btn.zappar:hover { background-color: #e62e5c; }
+    `;
+    document.head.appendChild(style);
 
+    // 2. Create Modal Structure (Title, Buttons)
+    const modal = document.createElement('div');
+    modal.id = 'intro-modal';
+    
+    const title = document.createElement('h2');
+    title.innerText = "Select AR Experience";
+    modal.appendChild(title);
+
+    const btnBabylon = document.createElement('button');
+    btnBabylon.className = 'mode-btn';
+    btnBabylon.innerText = "Launch Babylon WebXR";
+    
+    const btnZappar = document.createElement('button');
+    btnZappar.className = 'mode-btn zappar';
+    btnZappar.innerText = "Launch Zappar (Image Track)";
+
+    modal.appendChild(btnBabylon);
+    modal.appendChild(btnZappar);
+    document.body.appendChild(modal);
+
+    // 3. Logic helper to hide modal and show canvas
+    const revealCanvas = () => {
+        const canvas = document.getElementById("canvas-background");
+        if(canvas) canvas.style.display = "block"; // Display the canvas
+        modal.remove(); // Remove the modal from the DOM
+    };
+
+    // --- Button Actions ---
+    
+    // WebXR Launch: Calls the combined initialization function
+    btnBabylon.onclick = () => {
+        revealCanvas();
+        startBabylonXR(); 
+    };
+
+    // Zappar Launch: Calls the separate Zappar initialization function
+    btnZappar.onclick = () => {
+        revealCanvas();
+        initZappar(); 
+    };
+}
+
+// ------------------------------------------------------------------------------------------------------
+
+/**
+ * ~ Combined Function: Initializes Babylon Standard Scene AND WebXR AR capabilities.
+ * @returns Promise<void>
+ */
+async function startBabylonXR(): Promise<void> {
+    console.log("startBabylonXR() - Initializing Babylon Engine and WebXR");
+
+    // --- 1. Basic Babylon Setup (Replaces initBabylon()) ---
     const canvas = document.getElementById("canvas-background") as HTMLCanvasElement;
-
     const engine = new BABYLON.Engine(canvas, true);
-  
     const scene = new BABYLON.Scene(engine);
 
+    // Standard Camera and Controls
     const camera = new BABYLON.ArcRotateCamera("camera", (Math.PI / 4)*3, Math.PI / 4, 10, BABYLON.Vector3.Zero(), scene);
     camera.attachControl(canvas, true);
 
+    // Basic Scene Lighting
     const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
     light.intensity = 0.7;
 
+    // Sample Meshes for scene content
     const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2, segments: 32 }, scene);
     sphere.position.y = 1;
 
     const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 10, height: 10 }, scene);
     ground.position = new BABYLON.Vector3(0, 0, 0);
 
-    return scene;
-} 
 
-
-
-// ------------------------------------------------------------------------------------------------------
-
-/**
- * ~ Check if browser is compatible with Zappar, request user camera permissions, and initialize Zappar
- * @returns void
- */
-
-function initZappar(): void {
-    console.log("initZappar()");
-}
-
-
-
-// ------------------------------------------------------------------------------------------------------
-
-/**
- * ~ 
- * @returns void
- */
-
-async function initWebXR(scene : Promise<BABYLON.Scene>): Promise<BABYLON.Scene>  {
-    console.log("initWebXR()");
-
-  // --- AR Support Check and Integration ---
+    // --- 2. WebXR Integration (Replaces initWebXR()) ---
     const AR_SESSION_MODE = 'immersive-ar';
 
+    // Check if the browser/device supports the requested AR session mode
     const isARSupported = await BABYLON.WebXRSessionManager.IsSessionSupportedAsync(AR_SESSION_MODE);
 
     if (isARSupported) {
         console.log("WebXR AR is supported. Attempting to create AR experience.");
         try {
-            // Initialize the AR experience
-            const xr = await (await scene).createDefaultXRExperienceAsync({
-                uiOptions: {
-                    sessionMode: AR_SESSION_MODE // Request AR mode
-                },
-                floorMeshes: [ground], // Use the ground mesh for hit-testing
-                optionalFeatures: ['hit-test'] // Explicitly request essential AR features
+            // Create the default WebXR experience helper (handles UI button, controllers, etc.)
+            const xr = await scene.createDefaultXRExperienceAsync({
+                uiOptions: { sessionMode: AR_SESSION_MODE },
+                // Request hit-test functionality for placing objects in the real world
+                optionalFeatures: ['hit-test'] 
             });
 
             console.log("Default AR Experience created successfully.");
 
-            // Example: What to do when AR starts
+            // Optional: Listen to state changes (Entering/Exiting AR)
             xr.baseExperience.onStateChangedObservable.add((state) => {
-                if (state === BABYLON.WebXRState.IN_XR) {
-                    console.log("User entered AR mode.");
-                    // You might want to hide the sphere here until it's placed
-                    // sphere.isVisible = false; 
-                } else if (state === BABYLON.WebXRState.NOT_IN_XR) {
-                    console.log("User exited AR mode.");
-                }
+                if (state === BABYLON.WebXRState.IN_XR) console.log("User entered AR mode.");
             });
-
 
         } catch (error) {
             console.error("Failed to initialize WebXR AR experience:", error);
-            // Alert the user that AR failed to start despite support detection
-            const message = "AR is supported but failed to start. Ensure your device is up-to-date and AR services are active.";
-            alert(message);
+            alert("AR is supported but failed to start. Check device settings.");
         }
     } else {
-        console.warn(`WebXR session mode "${AR_SESSION_MODE}" not supported in this browser/device. Proceeding with standard 3D view.`);
-        // You can add a visible message to the user here if you like
-        // e.g., show a text block on the canvas saying "AR Not Supported"
-    }
-    // --- End AR Support Check ---
-
-    return scene;
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//ON DOMContentLoaded
-window.addEventListener('DOMContentLoaded', () => {
-    console.log("%cDOM Conent Loaded", "color:green");
-
-    // Initialize Firebase
-    initFirebase();
-
-    // Initialize the game
-    let scene_01 = initBablyon();
-
-    // Initialize WebXR
-    scene_01 = initWebXR(scene_01);
-
-    // Start the game
-
-    });
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
-* Initialize the game engine and start the game loop
-* @returns void
-*/
-function init(): void {
-    console.log("init()");
-    
-    //notes of what to do
-    // initHTML();
-    // initEngine();
-    // initLevelManager();
-    
-
-
-
-
-
-
-  // 3rd attempt
-
-
-    const canvas = document.getElementById("canvas-background") as HTMLCanvasElement;
-    const engine = new BABYLON.Engine(canvas, true);
-
-    const createScene = async () => {
-      const scene = new BABYLON.Scene(engine);
-      const camera = new BABYLON.ArcRotateCamera("camera", (Math.PI / 4)*3, Math.PI / 4, 10, BABYLON.Vector3.Zero(), scene);
-      camera.attachControl(canvas, true);
-      const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-      light.intensity = 0.7;
-
-      const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2, segments: 32 }, scene);
-      sphere.position.y = 1;
-
-      const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 10, height: 10 }, scene);
-      ground.position = new BABYLON.Vector3(0, 0, 0);
-
-      
-      // --- AR Support Check and Integration ---
-      const AR_SESSION_MODE = 'immersive-ar';
-
-      const isARSupported = await BABYLON.WebXRSessionManager.IsSessionSupportedAsync(AR_SESSION_MODE);
-
-      if (isARSupported) {
-          console.log("WebXR AR is supported. Attempting to create AR experience.");
-          try {
-              // Initialize the AR experience
-              const xr = await scene.createDefaultXRExperienceAsync({
-                  uiOptions: {
-                      sessionMode: AR_SESSION_MODE // Request AR mode
-                  },
-                  floorMeshes: [ground], // Use the ground mesh for hit-testing
-                  optionalFeatures: ['hit-test'] // Explicitly request essential AR features
-              });
-
-              console.log("Default AR Experience created successfully.");
-
-              // Example: What to do when AR starts
-              xr.baseExperience.onStateChangedObservable.add((state) => {
-                  if (state === BABYLON.WebXRState.IN_XR) {
-                      console.log("User entered AR mode.");
-                      // You might want to hide the sphere here until it's placed
-                      // sphere.isVisible = false; 
-                  } else if (state === BABYLON.WebXRState.NOT_IN_XR) {
-                      console.log("User exited AR mode.");
-                  }
-              });
-
-
-          } catch (error) {
-              console.error("Failed to initialize WebXR AR experience:", error);
-              // Alert the user that AR failed to start despite support detection
-              const message = "AR is supported but failed to start. Ensure your device is up-to-date and AR services are active.";
-              alert(message);
-          }
-      } else {
-          console.warn(`WebXR session mode "${AR_SESSION_MODE}" not supported in this browser/device. Proceeding with standard 3D view.`);
-          // You can add a visible message to the user here if you like
-          // e.g., show a text block on the canvas saying "AR Not Supported"
-      }
-      // --- End AR Support Check ---
-
-      return scene;
+        console.warn(`WebXR session mode "${AR_SESSION_MODE}" not supported. Proceeding in standard 3D view.`);
     }
 
-
-    createScene().then(scene => {
-        engine.runRenderLoop(() => {
-            scene.render();
-        });
-    });
-
-    window.addEventListener("resize", () => {
-        engine.resize();
+    // --- 3. Render Loop ---
+    // Handle engine resize on window resize
+    window.addEventListener('resize', () => engine.resize());
+    
+    // Start the main render loop for Babylon
+    engine.runRenderLoop(() => {
+        scene.render();
     });
 }
 
+// ------------------------------------------------------------------------------------------------------
 
+/**
+ * ~ Independent Zappar Initialization: Sets up the Zappar AR engine and image tracking.
+ * @returns void
+ */
+function initZappar(): void {
+  console.log("initZappar() - Initializing Zappar Engine and Image Tracking");
 
+  // URL to the target image file (.zpt) for computer vision tracking
+  const target = new URL('./public/assets/computer-vision-assets/target1.zpt', import.meta.url).href;
 
+  // Check for Zappar browser compatibility and show UI if incompatible
+  if (ZapparBabylon.browserIncompatible()) {
+    ZapparBabylon.browserIncompatibleUI();
+    throw new Error('Unsupported browser');
+  }
 
-    // new code to set up basic babyon scene here
+  // Setup standard Babylon engine components
+  const canvas = document.getElementById("canvas-background") as HTMLCanvasElement;
+  const engine = new BABYLON.Engine(canvas, true);
+  const scene = new BABYLON.Scene(engine);
+  
+  // Zappar typically uses a DirectionalLight for AR lighting
+  const light = new BABYLON.DirectionalLight('dir02', new BABYLON.Vector3(0, 0, -1), scene);
+  light.position = new BABYLON.Vector3(0, 1, -10);
 
-    /*
+  // Use the Zappar-specific Camera for AR tracking
+  const camera = new ZapparBabylon.Camera('ZapparCamera', scene as any);
 
+  // Request camera access permission from the user
+  ZapparBabylon.permissionRequestUI().then((granted) => {
+    if (granted) camera.start(); // Start camera if permission granted
+    else ZapparBabylon.permissionDeniedUI(); // Show permission denied message
+  });
 
-    const target = './assets/computer-vision-assets/target1.png';
+  // Load the Image Tracker and create its transformation node
+  const imageTracker = new ZapparBabylon.ImageTrackerLoader().load(target);
+  const trackerTransformNode = new ZapparBabylon.ImageAnchorTransformNode('tracker', camera, imageTracker, scene as any);
 
-    const canvas = document.getElementById("canvas-background") as HTMLCanvasElement
-    const engine = new BABYLON.Engine(canvas, true)
+  // Toggle content visibility based on whether the image is visible
+  trackerTransformNode.setEnabled(false);
+  imageTracker.onVisible.bind(() => trackerTransformNode.setEnabled(true));
+  imageTracker.onNotVisible.bind(() => trackerTransformNode.setEnabled(false));
 
+  // Scene content (meshes)
+  const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 10, height: 10 }, scene);
+  const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2, segments: 32 }, scene);
+  // Important: Parent content to the tracker so it moves with the detected image
+  (sphere as any).parent = trackerTransformNode;
+  (ground as any).parent = trackerTransformNode; // Add ground to tracker too
 
-    const createScene = async () => {
-      const scene = new BABYLON.Scene(engine)
+  // Handle engine resize
+  window.addEventListener('resize', () => engine.resize());
 
-      const camera = new BABYLON.FreeCamera(
-        "camera",
-        new BABYLON.Vector3(0, 1.6, 0),
-        scene
-      )
-      camera.setTarget(BABYLON.Vector3.Zero())
+  // Start the Zappar render loop, which requires camera.updateFrame()
+  engine.runRenderLoop(() => {
+    camera.updateFrame(); // Zappar specific update call
+    scene.render();
+  });
+}
 
-      const light = new BABYLON.HemisphericLight(
-        "light",
-        new BABYLON.Vector3(0, 1, 0),
-        scene
-      )
+// ------------------------------------------------------------------------------------------------------
 
-      const box = BABYLON.MeshBuilder.CreateBox(
-        "trackedBox",
-        { size: 0.1 },
-        scene
-      )
-      box.isVisible = false
-
-      const xr = await scene.createDefaultXRExperienceAsync({
-        uiOptions: {
-          sessionMode: "immersive-ar"
-        },
-        optionalFeatures: true
-      })
-
-      const imageTracking = xr.baseExperience.featuresManager.enableFeature(
-        BABYLON.WebXRFeatureName.IMAGE_TRACKING,
-        "latest",
-        {
-          images: [
-            {
-              src: "./assets/computer-vision-assets/target1.png",
-              estimatedRealWorldWidth: 0.2
-            }
-          ]
-        }
-      )
-
-      imageTracking.onTrackedImageUpdatedObservable.add((image) => {
-        if (image.trackingState === "tracked") {
-          box.isVisible = true
-
-          image.transformationMatrix.decompose(
-            box.scaling,
-            box.rotationQuaternion,
-            box.position
-          )
-        } else {
-          box.isVisible = false
-        }
-      })
-
-      return scene
-    }
-
-    createScene().then(scene => {
-      engine.runRenderLoop(() => {
-        scene.render()
-      })
-    })
-
-    window.addEventListener("resize", () => {
-      engine.resize()
-    })
-
-
-    createScene().then(scene => {
-      engine.runRenderLoop(() => {
-        scene.render()
-      })
-    })
-
-    */
-
-    // start engine and
+// ON DOMContentLoaded: The entry point for the application
+window.addEventListener('DOMContentLoaded', () => {
+    console.log("%cDOM Content Loaded", "color:green");
     
-
-    // create the game engine
-    //let engine = new Engine();
+    // 1. Initialize HTML elements (hides canvas)
+    initHTML();
     
-    // create the game level manager
-    //let levelManager = new LevelManager();
-
-    // Load the first level
-    //levelManager.LoadLevel(1, engine);
-
-    // start the game engine
-    //engine.Start(1280, 720, levelManager);
-//}
+    // 2. Initialize Firebase SDKs
+    initFirebase();
     
+    // 3. Setup the initial UI (Shows buttons and waits for user input)
+    // This function will call the appropriate engine initialization (startBabylonXR or initZappar)
+    setupSelectionUI();
+});
