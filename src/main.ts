@@ -1,5 +1,6 @@
 // * import Babylon modules
 import * as BABYLON from '@babylonjs/core';
+import * as GUI from '@babylonjs/gui';
 import * as MAT from '@babylonjs/materials';
 
 // * import zappar babylon module
@@ -112,13 +113,13 @@ function setupSelectionUI(): void {
 async function startBabylonXR(): Promise<void> {
     console.log("startBabylonXR() - Initializing Babylon Engine and WebXR");
 
-    // --- 1. Basic Babylon Setup (Replaces initBabylon()) ---
+    // * Basic Babylon Setup
     const canvas = document.getElementById("canvas-background") as HTMLCanvasElement;
     const engine = new BABYLON.Engine(canvas, true);
     const scene = new BABYLON.Scene(engine);
 
     // Standard Camera and Controls
-    const camera = new BABYLON.ArcRotateCamera("camera", (Math.PI / 4)*3, Math.PI / 4, 10, BABYLON.Vector3.Zero(), scene);
+    const camera = new BABYLON.ArcRotateCamera("camera", (Math.PI / 4)*5, (Math.PI / 4), 10, BABYLON.Vector3.Zero(), scene);
     camera.attachControl(canvas, true);
 
     // Basic Scene Lighting
@@ -133,7 +134,7 @@ async function startBabylonXR(): Promise<void> {
     ground.position = new BABYLON.Vector3(0, 0, 0);
 
 
-    // --- 2. WebXR Integration (Replaces initWebXR()) ---
+    // * WebXR Integration
     const AR_SESSION_MODE = 'immersive-ar';
 
     // Check if the browser/device supports the requested AR session mode
@@ -162,9 +163,39 @@ async function startBabylonXR(): Promise<void> {
         }
     } else {
         console.warn(`WebXR session mode "${AR_SESSION_MODE}" not supported. Proceeding in standard 3D view.`);
+
+        // Create a simple text billboard to inform the user
+        // Create a plane mesh to serve as the text billboard
+        const textPlane = BABYLON.MeshBuilder.CreatePlane("textPlane", { width: 4, height: 1 }, scene);
+        textPlane.position = new BABYLON.Vector3(0, sphere.position.y + 2.0, 0); // Position it above the sphere
+        textPlane.parent = sphere; // Anchor the text plane to the sphere
+
+        // Create the Advanced Dynamic Texture (ADT)
+        const adt = GUI.AdvancedDynamicTexture.CreateForMesh(textPlane, 600, 200);
+
+        // Create the text block
+        const textBlock = new GUI.TextBlock();
+        textBlock.text = "AR not supported.\nThis is a default 3D scene.";
+        textBlock.color = "white";
+        textBlock.fontSize = 48; // Adjust size for better visibility on the 512x128 texture
+        textBlock.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+        textBlock.textVerticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+
+
+        adt.addControl(textBlock);
+
+        // Create a material for the plane (to make it green)
+        const textMaterial = new BABYLON.StandardMaterial("textMaterial", scene);
+        textMaterial.diffuseColor = new BABYLON.Color3(0.0, 0.5, 0.0); // Dark Green color
+        textMaterial.emissiveColor = new BABYLON.Color3(0.0, 0.5, 0.0);
+        textMaterial.backFaceCulling = false; // Show text from both sides
+        textMaterial.diffuseTexture = adt;
+
+        // Apply the material (with the ADT) to the plane
+        textPlane.material = textMaterial;
     }
 
-    // --- 3. Render Loop ---
+    // * Render Loop
     // Handle engine resize on window resize
     window.addEventListener('resize', () => engine.resize());
     
