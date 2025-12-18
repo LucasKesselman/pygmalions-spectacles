@@ -40,32 +40,30 @@ function initFirebase() : void {
   // Initialize Realtime Database and get a reference to the service
   const database = getDatabase();
 
-  // Function to write user data to the database
-  function writeUserData(userId : string) {
-
-    console.log("writeUserData() - UserID:", userId);
-    set(ref(database, 'users/' + userId), {
-      anonymous: true,
-      lastModified: Date.now(),
-      name: "Anonymous User"
-    });
-  } 
-
   // Initialize Authentication 
   const auth = getAuth();
-
 
   // Now we can use the auth instance to monitor auth state changesand sign in anonymously, Listen for authentication state changes
   onAuthStateChanged(auth, (user) => {
     console.log("Auth state changed, user:");
     console.log(user);
+
     if (user) {
       console.log("User is signed in");
       // User is signed in, see docs for a list of available properties: https://firebase.google.com/docs/reference/js/auth.user
-      const userID = user.uid;
 
-      writeUserData(userID);
-      // ...
+      // Write user data to Realtime Database
+      console.log("Writing user data to Realtime Database for user ID: " + user.uid);
+      set(ref(database, 'users/' + user.uid), {
+        anonymous: true,
+        lastModified: Date.now(),
+        name: "Anonymous Artie User"
+      })
+      .catch((error) => {
+        console.error("Error writing user data to database:", error);
+      });
+
+
 
     } else {
       console.log("User is signed out");
