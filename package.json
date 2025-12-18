@@ -38,6 +38,6 @@
     "start": "concurrently \"tsc --watch\" \"vite --port 3000 --host\"",
     "compile": "tsc",
     "build": "vite build",
-    "deploy": "tsc && vite build && firebase deploy"
+    "deploy": "npm update && tsc && vite build && firebase deploy"
   }
 }
