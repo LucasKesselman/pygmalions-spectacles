@@ -22,6 +22,7 @@ import { getDatabase, ref, set } from 'firebase/database';
  */
 function initFirebase() : void {
   console.log("initFirebase()");
+
   // Firebase configuration object (sensitive info redacted/example values used)
   const firebaseConfig = {
     apiKey: "AIzaSyD4W0y8dpLvTQ0VFNniFJJtqVzGjbdpfjg",
@@ -32,60 +33,71 @@ function initFirebase() : void {
     appId: "1:988189221716:web:7ce2741a3be5558ba51ec1",
     databaseURL: "https://pygmalions-specs-default-rtdb.firebaseio.com/"
   };
+
   // Initialize Firebase App
   const app = initializeApp(firebaseConfig);
-// Initialize Realtime Database and get a reference to the service
+
+  // Initialize Realtime Database and get a reference to the service
   const database = getDatabase();
-// Function to write user data to the database
+
+  // Function to write user data to the database
   function writeUserData(userId : string) {
+
     console.log("writeUserData() - UserID:", userId);
-  const db = getDatabase();
-  set(ref(db, 'users/' + userId), {
-    
-  });
+    set(ref(database, 'users/' + userId), {
+      anonymous: true,
+      lastModified: Date.now(),
+      name: "Anonymous User"
+    });
   } 
-// Initialize Authentication 
-const auth = getAuth();
-// Now we can use the auth instance to monitor auth state changesand sign in anonymously
-// Listen for authentication state changes
-onAuthStateChanged(auth, (user) => {
-  console.log(user)
-  if (user) {
-    console.log("User is signed in");
-    // User is signed in, see docs for a list of available properties
-    // https://firebase.google.com/docs/reference/js/auth.user
-    const userID = user.uid;
 
-    writeUserData(userID);
-    // ...
-  } else {
-    // User is signed out
-    // ...
+  // Initialize Authentication 
+  const auth = getAuth();
+
+
+  // Now we can use the auth instance to monitor auth state changesand sign in anonymously, Listen for authentication state changes
+  onAuthStateChanged(auth, (user) => {
+    console.log("Auth state changed, user:");
+    console.log(user);
+    if (user) {
+      console.log("User is signed in");
+      // User is signed in, see docs for a list of available properties: https://firebase.google.com/docs/reference/js/auth.user
+      const userID = user.uid;
+
+      writeUserData(userID);
+      // ...
+
+    } else {
+      console.log("User is signed out");
+      // User is signed out
+      // ...
+    }
+    });
+
+  // Sign in anonymously
+  signInAnonymously(auth)
+    .then(() => {
+      console.log("Signed in anonymously");
+      // Signed in..
+    })
+    .catch((error) => {
+      console.log(error.code);
+      console.log(error.message);
+      // ...
+    });
+  } 
+
+
+  /**
+   * ~ Initialize base HTML elements and setup initial state
+   * @returns void
+   */
+  function initHTML(): void {
+      console.log("initHTML()");
+      // Crucial step: Hide the canvas initially so only the modal is visible on load.
+      const canvas = document.getElementById("canvas-background");
+      if(canvas) canvas.style.display = "none";
   }
-  });
-// Sign in anonymously
-signInAnonymously(auth)
-  .then(() => {
-    // Signed in..
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // ...
-  });
-} 
-
-
-/**
- * ~ Initialize base HTML elements and setup initial state
- * @returns void
- */
-function initHTML(): void {
-    console.log("initHTML()");
-    // Crucial step: Hide the canvas initially so only the modal is visible on load.
-    const canvas = document.getElementById("canvas-background");
-    if(canvas) canvas.style.display = "none";
-}
 
 // ------------------------------------------------------------------------------------------------------
 
