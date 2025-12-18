@@ -12,7 +12,8 @@ import LevelManager from './core/LevelManager.ts';
 
 // * Import Firebase
 import { initializeApp } from "firebase/app";
-
+import { getAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
+import { getDatabase, ref, set } from 'firebase/database';
 // ------------------------------------------------------------------------------------------------------
 
 /**
@@ -28,11 +29,52 @@ function initFirebase() : void {
     projectId: "pygmalions-specs",
     storageBucket: "pygmalions-specs.firebasestorage.app",
     messagingSenderId: "988189221716",
-    appId: "1:988189221716:web:7ce2741a3be5558ba51ec1"
+    appId: "1:988189221716:web:7ce2741a3be5558ba51ec1",
+    databaseURL: "https://pygmalions-specs-default-rtdb.firebaseio.com/"
   };
   // Initialize Firebase App
   const app = initializeApp(firebaseConfig);
+// Initialize Realtime Database and get a reference to the service
+  const database = getDatabase();
+// Function to write user data to the database
+  function writeUserData(userId : string) {
+    console.log("writeUserData() - UserID:", userId);
+  const db = getDatabase();
+  set(ref(db, 'users/' + userId), {
+    
+  });
+  } 
+// Initialize Authentication 
+const auth = getAuth();
+// Now we can use the auth instance to monitor auth state changesand sign in anonymously
+// Listen for authentication state changes
+onAuthStateChanged(auth, (user) => {
+  console.log(user)
+  if (user) {
+    console.log("User is signed in");
+    // User is signed in, see docs for a list of available properties
+    // https://firebase.google.com/docs/reference/js/auth.user
+    const userID = user.uid;
+
+    writeUserData(userID);
+    // ...
+  } else {
+    // User is signed out
+    // ...
+  }
+  });
+// Sign in anonymously
+signInAnonymously(auth)
+  .then(() => {
+    // Signed in..
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ...
+  });
 } 
+
 
 /**
  * ~ Initialize base HTML elements and setup initial state
