@@ -1,0 +1,30 @@
+extend type Design {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Design", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Design`.`author`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  authorId: UUID @fdc_generated(from: "Design.author", purpose: IMPLICIT_REF_FIELD)
+}
+extend type TransactionLog {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "TransactionLog", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `TransactionLog`.`design`. It must match the value of `Design`.`id`. See `@ref` for how to customize it.
+  """
+  designId: UUID @fdc_generated(from: "TransactionLog.design", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `TransactionLog`.`user`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  userId: UUID @fdc_generated(from: "TransactionLog.user", purpose: IMPLICIT_REF_FIELD)
+}
+extend type User {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "User", purpose: IMPLICIT_KEY_FIELD)
+}

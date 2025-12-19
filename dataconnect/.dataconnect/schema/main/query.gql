@@ -1,0 +1,161 @@
+extend type Query {
+  """
+  ✨ Look up a single `Design` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  design(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Design_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Design_FirstRow
+  ): Design @fdc_generated(from: "Design", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `TransactionLog` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  transactionLog(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: TransactionLog_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: TransactionLog_FirstRow
+  ): TransactionLog @fdc_generated(from: "TransactionLog", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `User` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  user(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: User_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: User_FirstRow
+  ): User @fdc_generated(from: "User", purpose: QUERY_SINGLE)
+  """
+  ✨ List `Design` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  designs(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Design_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Design_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Design_Having
+  ): [Design!]! @fdc_generated(from: "Design", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `TransactionLog` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  transactionLogs(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: TransactionLog_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [TransactionLog_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: TransactionLog_Having
+  ): [TransactionLog!]! @fdc_generated(from: "TransactionLog", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `User` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  users(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: User_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [User_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: User_Having
+  ): [User!]! @fdc_generated(from: "User", purpose: QUERY_MULTIPLE)
+}

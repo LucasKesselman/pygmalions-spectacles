@@ -1,0 +1,13 @@
+specVersion: "v1"
+serviceId: "pygmalions-spectacles"
+location: "us-east4"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "my_database_name" # pygmalions_specs_db?
+      cloudSql:
+        instanceId: "pygmalions-spectacles-fdc"
+        # schemaValidation: "STRICT"     # STRICT mode makes Postgres schema match Data Connect exactly.
+        # schemaValidation: "COMPATIBLE" # COMPATIBLE mode makes Postgres schema compatible with Data Connect.
+connectorDirs: []

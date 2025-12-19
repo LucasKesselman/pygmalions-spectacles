@@ -1,0 +1,454 @@
+extend type Design {
+  """
+  ✨ List `TransactionLog` objects in a one-to-many relationship (where `TransactionLog`.`design` is this object).
+  """
+  transactionLogs_on_design(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: TransactionLog_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [TransactionLog_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: TransactionLog_Having
+  ): [TransactionLog!]! @fdc_generated(from: "TransactionLog.design", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "Design", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `Design` table.
+  """
+  _count: Int! @fdc_generated(from: "Design.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Design` table where the `authorId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  authorId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Design.authorId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Design` table where the `category` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  category_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Design.category", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Design` table where the `createdAt` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  createdAt_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Design.createdAt", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Design` table where the `description` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  description_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Design.description", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Design` table where the `digitalDesignUrl` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  digitalDesignUrl_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Design.digitalDesignUrl", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Design` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Design.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Design` table where the `price` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  price_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Design.price", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Design` table where the `targetImageUrl` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  targetImageUrl_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Design.targetImageUrl", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Design` table where the `title` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  title_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Design.title", purpose: QUERY_COUNT)
+  """
+  ✨ Sum the `price` field in the `Design` table.
+  """
+  price_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "Design.price", purpose: QUERY_SUM)
+  """
+  ✨ Average the `price` field in the `Design` table.
+  """
+  price_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "Design.price", purpose: QUERY_AVG)
+  """
+  ✨ Minimum of the `createdAt` field in the `Design` table.
+  """
+  createdAt_min: Timestamp @fdc_generated(from: "Design.createdAt", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `price` field in the `Design` table.
+  """
+  price_min: Float @fdc_generated(from: "Design.price", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `createdAt` field in the `Design` table.
+  """
+  createdAt_max: Timestamp @fdc_generated(from: "Design.createdAt", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `price` field in the `Design` table.
+  """
+  price_max: Float @fdc_generated(from: "Design.price", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "Design.id", purpose: GLOBAL_ID)
+}
+extend type TransactionLog {
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "TransactionLog", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `TransactionLog` table.
+  """
+  _count: Int! @fdc_generated(from: "TransactionLog.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransactionLog` table where the `amount` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  amount_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransactionLog.amount", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransactionLog` table where the `buyerId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  buyerId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransactionLog.buyerId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransactionLog` table where the `designId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  designId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransactionLog.designId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransactionLog` table where the `details` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  details_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransactionLog.details", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransactionLog` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransactionLog.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransactionLog` table where the `sellerId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  sellerId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransactionLog.sellerId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransactionLog` table where the `transactionDate` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  transactionDate_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransactionLog.transactionDate", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransactionLog` table where the `transactionType` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  transactionType_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransactionLog.transactionType", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TransactionLog` table where the `userId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  userId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TransactionLog.userId", purpose: QUERY_COUNT)
+  """
+  ✨ Sum the `amount` field in the `TransactionLog` table.
+  """
+  amount_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "TransactionLog.amount", purpose: QUERY_SUM)
+  """
+  ✨ Average the `amount` field in the `TransactionLog` table.
+  """
+  amount_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "TransactionLog.amount", purpose: QUERY_AVG)
+  """
+  ✨ Minimum of the `amount` field in the `TransactionLog` table.
+  """
+  amount_min: Float @fdc_generated(from: "TransactionLog.amount", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `transactionDate` field in the `TransactionLog` table.
+  """
+  transactionDate_min: Timestamp @fdc_generated(from: "TransactionLog.transactionDate", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `amount` field in the `TransactionLog` table.
+  """
+  amount_max: Float @fdc_generated(from: "TransactionLog.amount", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `transactionDate` field in the `TransactionLog` table.
+  """
+  transactionDate_max: Timestamp @fdc_generated(from: "TransactionLog.transactionDate", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "TransactionLog.id", purpose: GLOBAL_ID)
+}
+extend type User {
+  """
+  ✨ List `Design` objects in a one-to-many relationship (where `Design`.`author` is this object).
+  """
+  designs_on_author(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Design_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Design_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Design_Having
+  ): [Design!]! @fdc_generated(from: "Design.author", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  ✨ List `TransactionLog` objects in a one-to-many relationship (where `TransactionLog`.`user` is this object).
+  """
+  transactionLogs_on_user(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: TransactionLog_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [TransactionLog_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: TransactionLog_Having
+  ): [TransactionLog!]! @fdc_generated(from: "TransactionLog.user", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "User", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `User` table.
+  """
+  _count: Int! @fdc_generated(from: "User.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `bio` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  bio_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.bio", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `createdAt` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  createdAt_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.createdAt", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `displayName` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  displayName_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.displayName", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `email` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  email_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.email", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `passwordHash` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  passwordHash_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.passwordHash", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `profilePictureUrl` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  profilePictureUrl_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.profilePictureUrl", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `User` table where the `username` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  username_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "User.username", purpose: QUERY_COUNT)
+  """
+  ✨ Minimum of the `createdAt` field in the `User` table.
+  """
+  createdAt_min: Timestamp @fdc_generated(from: "User.createdAt", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `createdAt` field in the `User` table.
+  """
+  createdAt_max: Timestamp @fdc_generated(from: "User.createdAt", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "User.id", purpose: GLOBAL_ID)
+}

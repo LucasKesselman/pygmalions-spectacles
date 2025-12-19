@@ -1,0 +1,32 @@
+type User @table {
+  username: String!
+  email: String!
+  passwordHash: String!
+  createdAt: Timestamp!
+  displayName: String
+  bio: String
+  profilePictureUrl: String
+}
+
+type Design @table {
+  title: String!
+  description: String!
+  targetImageUrl: String!
+  digitalDesignUrl: String!
+  createdAt: Timestamp!
+  author: User
+  tags: [String]
+  category: String
+  price: Float
+}
+
+type TransactionLog @table {
+  transactionType: String!
+  transactionDate: Timestamp!
+  amount: Float!
+  user: User
+  design: Design
+  details: String
+  buyerId: UUID
+  sellerId: UUID
+}

@@ -11,9 +11,14 @@ import Engine from './core/Engine.ts';
 import LevelManager from './core/LevelManager.ts';
 
 // * Import Firebase
-import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
-import { getDatabase, ref, set } from 'firebase/database';
+// https://firebase.google.com/docs/reference/js
+import * as FIREBASE_APP from "@firebase/app";
+import * as FIREBASE_AUTH from "@firebase/auth";
+import * as FIREBASE_DATABASE from '@firebase/database';
+import * as FIREBASE_FIRESTORE from '@firebase/firestore';
+//import { getAuth, onAuthStateChanged, signInAnonymously } from "@firebase/auth";
+//import { getDatabase, ref, set } from '@firebase/database';
+
 // ------------------------------------------------------------------------------------------------------
 
 /**
@@ -35,16 +40,16 @@ function initFirebase() : void {
   };
 
   // Initialize Firebase App
-  const app = initializeApp(firebaseConfig);
+  const app = FIREBASE_APP.initializeApp(firebaseConfig);
 
   // Initialize Realtime Database and get a reference to the service
-  const database = getDatabase();
+  const database = FIREBASE_DATABASE.getDatabase();
 
   // Initialize Authentication 
-  const auth = getAuth();
+  const auth = FIREBASE_AUTH.getAuth();
 
   // Now we can use the auth instance to monitor auth state changesand sign in anonymously, Listen for authentication state changes
-  onAuthStateChanged(auth, (user) => {
+  FIREBASE_AUTH.onAuthStateChanged(auth, (user) => {
     console.log("Auth state changed, user:");
     console.log(user);
 
@@ -54,7 +59,7 @@ function initFirebase() : void {
 
       // Write user data to Realtime Database
       console.log("Writing user data to Realtime Database for user ID: " + user.uid);
-      set(ref(database, 'users/' + user.uid), {
+      FIREBASE_DATABASE.set(FIREBASE_DATABASE.ref(database, 'users/' + user.uid), {
         anonymous: true,
         lastModified: Date.now(),
         name: "Anonymous Artie User"
@@ -73,7 +78,7 @@ function initFirebase() : void {
     });
 
   // Sign in anonymously
-  signInAnonymously(auth)
+  FIREBASE_AUTH.signInAnonymously(auth)
     .then(() => {
       console.log("Signed in anonymously");
       // Signed in..
