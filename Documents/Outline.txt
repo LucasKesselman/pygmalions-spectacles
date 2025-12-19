@@ -1,11 +1,11 @@
 
 Tasks
 
-    Get Sphere to display in AR anchored to trained image via Zappar
-        train image
-        display Sphere in AR
-        Lock sphere to target
-        ensure /public target is being bundled in webpack/hosting process (tsc,vite,firebase)
+    ✔️ - Get Sphere to display in AR anchored to trained image via Zappar
+        ✔️ - train image
+        ✔️ - display Sphere in AR
+        ✔️ - Lock sphere to target
+        ✔️ - ensure /public target is being bundled in webpack/hosting process (tsc,vite,firebase)
 
 
     Display user info in the landing modal

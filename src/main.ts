@@ -314,9 +314,18 @@ function initZappar(): void {
 
   // Scene content (meshes)
   const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 1, height: 1 }, scene);
-  const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 0.2, segments: 32 }, scene);
+
+
+  // Create a simple glowing material
+  const debugMaterial = new BABYLON.StandardMaterial("debugMat", scene);
+  debugMaterial.emissiveColor = new BABYLON.Color3(1, 0, 0); // Bright Red
+
+
+  const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 0.8, segments: 32 }, scene);
+  sphere.material = debugMaterial;
   // Position the sphere slightly "above" the target image (Y is up in Babylon)
   sphere.position.y = 0.1;
+  sphere.position.z = 0.3;
 
   // Important: Parent content to the tracker so it moves with the detected image
   (sphere as any).parent = trackerTransformNode;
