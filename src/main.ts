@@ -266,8 +266,8 @@ async function startBabylonXR(): Promise<void> {
 function initZappar(): void {
   console.log("initZappar() - Initializing Zappar Engine and Image Tracking");
 
-  // URL to the target image file (.zpt) for computer vision tracking
-  const target = new URL('./public/assets/computer-vision-assets/target1.zpt', import.meta.url).href;
+
+
 
   // Check for Zappar browser compatibility and show UI if incompatible
   if (ZapparBabylon.browserIncompatible()) {
@@ -284,6 +284,7 @@ function initZappar(): void {
   const light = new BABYLON.DirectionalLight('dir02', new BABYLON.Vector3(0, 0, -1), scene);
   light.position = new BABYLON.Vector3(0, 1, -10);
 
+
   // Use the Zappar-specific Camera for AR tracking
   const camera = new ZapparBabylon.Camera('ZapparCamera', scene as any);
 
@@ -293,18 +294,30 @@ function initZappar(): void {
     else ZapparBabylon.permissionDeniedUI(); // Show permission denied message
   });
 
+  // URL to the target image file (.zpt) for computer vision tracking
+  const target = 'assets/computer-vision-assets/target1.zpt';
   // Load the Image Tracker and create its transformation node
   const imageTracker = new ZapparBabylon.ImageTrackerLoader().load(target);
   const trackerTransformNode = new ZapparBabylon.ImageAnchorTransformNode('tracker', camera, imageTracker, scene as any);
 
   // Toggle content visibility based on whether the image is visible
-  trackerTransformNode.setEnabled(false);
-  imageTracker.onVisible.bind(() => trackerTransformNode.setEnabled(true));
-  imageTracker.onNotVisible.bind(() => trackerTransformNode.setEnabled(false));
+  //trackerTransformNode.setEnabled(false);
+  imageTracker.onVisible.bind(() => {
+    console.log("Image target visible");
+    trackerTransformNode.setEnabled(true);
+  });
+
+  imageTracker.onNotVisible.bind(() => {
+    console.log("Image target not visible");
+    trackerTransformNode.setEnabled(false);
+  });
 
   // Scene content (meshes)
-  const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 10, height: 10 }, scene);
-  const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 2, segments: 32 }, scene);
+  const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 1, height: 1 }, scene);
+  const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", { diameter: 0.2, segments: 32 }, scene);
+  // Position the sphere slightly "above" the target image (Y is up in Babylon)
+  sphere.position.y = 0.1;
+
   // Important: Parent content to the tracker so it moves with the detected image
   (sphere as any).parent = trackerTransformNode;
   (ground as any).parent = trackerTransformNode; // Add ground to tracker too
